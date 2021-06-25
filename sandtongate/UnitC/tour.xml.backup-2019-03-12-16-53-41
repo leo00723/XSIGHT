@@ -1,0 +1,402 @@
+<krpano version="1.19" title="Virtual Penthouse Tour">
+
+	<include url="skin/vtourskin.xml" />
+
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="false"
+	               maps_type="google"
+	               maps_bing_api_key=""
+	               maps_google_api_key=""
+	               maps_zoombuttons="false"
+	               gyro="true"
+	               webvr="true"
+	               webvr_gyro_keeplookingdirection="false"
+	               webvr_prev_next_hotspots="true"
+	               littleplanetintro="false"
+	               title="true"
+	               thumbs="true"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_buttons="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               deeplinking="false"
+	               loadscene_flags="MERGE"
+	               loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+	               loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+	               loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+	               loadingtext="Loading..."
+	               layout_width="100%"
+	               layout_maxwidth="814"
+	               controlbar_width="-24"
+	               controlbar_height="40"
+	               controlbar_offset="20"
+	               controlbar_offset_closed="-40"
+	               controlbar_overlap.no-fractionalscaling="10"
+	               controlbar_overlap.fractionalscaling="0"
+	               design_skin_images="vtourskin.png"
+	               design_bgcolor="0x2D3E50"
+	               design_bgalpha="0.8"
+	               design_bgborder="0"
+	               design_bgroundedge="1"
+	               design_bgshadow="0 4 10 0x000000 0.3"
+	               design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+	               design_thumbborder_padding="2"
+	               design_thumbborder_bgroundedge="0"
+	               design_text_css="color:#FFFFFF; font-family:Arial;"
+	               design_text_shadow="1"
+	               />
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values 
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<include url="skin/vtourskin_design_ultra_light.xml" />
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+
+
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+		if(startactions !== null, startactions() );
+	</action>
+
+    <control fovspeed="0"></control>
+    
+    <layer name="text"
+    url="textfield.swf"
+    keep="true"
+    align="lefttop" x="25" y="25"
+    html="[a style='text-decoration:none; color:#FFFFFF;' href='https://sandtongate.co.za/']Go Back[/a]"
+    css="font-family:Helvetica; font-size:15px; color:#FFFFFF;"
+    autowidth="auto"
+    autoheight="auto"
+    vcenter="false"
+    padding="11 38"
+    wordwrap="true"
+    selectable="false"
+    embeddedfonts="false"
+    background="true"
+    backgroundcolor="0x0003F52"
+    backgroundalpha="0.77"
+    border="false"
+    roundedge="5"
+    shadow="0.0"
+    shadowrange="4.0"
+    shadowangle="45"
+    shadowcolor="0x000000"
+    shadowalpha="1.0"
+    textshadow="0.0"
+    textshadowrange="4.0"
+    textshadowangle="45"
+    textshadowcolor="0x000000"
+    textshadowalpha="1.0"
+    onautosized=""
+    />
+    
+    <layer name="map" url="skin/UnitC.png" keep="true" handcursor="false" capture="false" align="righttop" scale="1" scale.mobile="0.5" scalechildren="true" onclick="openmap();"/>
+    
+    <action name="openmap">
+        set(layer[map].onclick, closemap(); ); layer[map].changeorigin(righttop,righttop); set(bigscale,1.5); if(layer[map].imagewidth GT stagewidth, div(bigscale, stagewidth, layer[map].imagewidth); ); tween(layer[map].x, 0); tween(layer[map].y, 0); tween(layer[map].scale, get(bigscale));
+    </action>
+    <!--
+     map closing - scale the map back to 0.25 of its image pixelsize
+     -->
+    <action name="closemap">
+        set(layer[map].onclick, openmap(); ); layer[map].changeorigin(righttop,righttop); tween(layer[map].x, 0); tween(layer[map].y, 0); tween(layer[map].scale, 1.0);
+    </action>
+    <!--  the map spot images  -->
+    <style name="mapspot" keep="true" url="skin/vtourskin_hotspot.png" parent="map" align="lefttop" edge="center" scale.mobile="0.5" scale="0.1"/>
+    <layer name="entrance-spot" style="mapspot" x="112" y="110" zorder="1" onclick="mapspot_loadscene(Entrance);"/>
+    <layer name="kitchen-spot" style="mapspot" x="150" y="108" zorder="1" onclick="mapspot_loadscene(Kitchen);"/>
+    <layer name="bedroom-small-spot" style="mapspot" x="200" y="108" zorder="1" onclick="mapspot_loadscene(Bedroom-Small);"/>
+    <layer name="lounge-spot" style="mapspot" x="200" y="60" zorder="1" onclick="mapspot_loadscene(Lounge);"/>
+    <layer name="dining-room-spot" style="mapspot" x="160" y="55" zorder="1" onclick="mapspot_loadscene(Dining-Room);"/>
+    <layer name="passageway-spot" style="mapspot" x="89" y="98" zorder="1" onclick="mapspot_loadscene(Passageway);"/>
+    <layer name="bedroom-2-spot" style="mapspot" x="92" y="125" zorder="1" onclick="mapspot_loadscene(Bedroom-2);"/>
+    <layer name="bedroom-3-spot" style="mapspot" x="87" y="69" zorder="1" onclick="mapspot_loadscene(Bedroom-3);"/>
+    <layer name="outside-lounge-spot" style="mapspot" x="80" y="40" zorder="1" onclick="mapspot_loadscene(Outside-Lounge);"/>
+    <layer name="master-balcony-spot" style="mapspot" x="40" y="20" zorder="1" onclick="mapspot_loadscene(Master-Balcony);"/>
+    <layer name="master-bedroom-spot" style="mapspot" x="50" y="50" zorder="1" onclick="mapspot_loadscene(Master-Bedroom);"/>
+    <layer name="master-entrance-spot" style="mapspot" x="47" y="96" zorder="1" onclick="mapspot_loadscene(Master-Entrance);"/>
+    <layer name="master-bathroom-spot" style="mapspot" x="32" y="120" zorder="1" onclick="mapspot_loadscene(Master-Bathroom);"/>
+    <!--
+     action for loading the scene when clicking on the map spots
+     -->
+    <action name="mapspot_loadscene">
+        if(layer[map].scale GT 0.25,
+        <!--
+         special mode for zoomed map: hide big map, loadscene, show small map
+         -->
+        set(layer[map].enabled, false); tween(layer[map].alpha, 0.0, 1.0, default, loadscene(%1, null, MERGE, BLEND(1)); set(layer[map].onclick, openmap(); ); layer[map].changeorigin(righttop,righttop); set(layer[map].x, 0); set(layer[map].y, 0); set(layer[map].scale, 1.0); set(events[sceneload].onloadcomplete, delayedcall(1, tween(layer[map].alpha, 1.0, 0.5, default, set(layer[map].enabled, true); ); ); ); ); ,
+        <!--  small map: just load the scene  -->
+        loadscene(%1, null, MERGE, BLEND(1)); );
+    </action>
+    
+    <!--  active spot image (overlays the normal spot)  -->
+    <layer name="activespot" url="skin/vtourskin_mapspotactive.png" keep="true" align="righttop" zorder="2" scale.mobile="2" scale="0.1"/>
+    <!--
+     radar layer (overlays the normal spot too, but is behind the activespot image)
+     -->
+    <layer name="radar" keep="true" url.flash="%SWFPATH%/plugins/radar.swf" url.html5="%SWFPATH%/plugins/radar.js" align="center" zorder="1" scale.mobile="1.5" fillalpha="0.5" fillcolor="0x00000" linewidth="1.0" linecolor="0xE0E0A0" linealpha="0" scale="0.3"/>
+	
+    <scene name="Entrance" title="Entrance" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_18.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, entrance-spot); set(layer[radar].parent, entrance-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="49.024" vlookat="11.848" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_18.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_18.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-89.330" atv="1.177" linkedscene="passageway" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="39.868" atv="-0.189" linkedscene="dining-room" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="106.108" atv="23.528" linkedscene="kitchen" />
+		<hotspot name="spot4" style="skin_hotspotstyle" ath="98.617" atv="-1.367" linkedscene="bedroom-small" />
+		<hotspot name="spot5" style="skin_hotspotstyle" ath="64.911" atv="-1.028" linkedscene="lounge" />
+
+	</scene>
+
+	<scene name="Kitchen" title="Kitchen" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_19.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, kitchen-spot); set(layer[radar].parent, kitchen-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_19.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_19.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="92.211" atv="-1.059" linkedscene="bedroom-small" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="45.137" atv="-2.120" linkedscene="lounge" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="-3.340" atv="-1.199" linkedscene="lounge" />
+		<hotspot name="spot4" style="skin_hotspotstyle" ath="-82.436" atv="-1.748" linkedscene="passageway" />
+		<hotspot name="spot5" style="skin_hotspotstyle" ath="-87.770" atv="22.469" linkedscene="entrance" />
+
+	</scene>
+
+	<scene name="Bedroom-Small" title="Small Bedroom" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_21.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, bedroom-small-spot); set(layer[radar].parent, bedroom-small-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-201.350" vlookat="29.972" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_21.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_21.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-85.000" atv="-0.087" linkedscene="kitchen" />
+
+	</scene>
+
+	<scene name="Lounge" title="Lounge" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_22.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, lounge-spot); set(layer[radar].parent, lounge-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-150.264" vlookat="14.821" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_22.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_22.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-132.629" atv="0.186" linkedscene="kitchen" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-78.922" atv="0.770" linkedscene="dining-room" />
+
+	</scene>
+
+	<scene name="Dining-Room" title="Dining Room" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_23.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, dining-room-spot); set(layer[radar].parent, dining-room-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-159.316" vlookat="27.407" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_23.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_23.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="99.474" atv="-0.508" linkedscene="lounge" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="149.692" atv="-1.612" linkedscene="bedroom-small" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="-177.782" atv="-1.824" linkedscene="kitchen" />
+		<hotspot name="spot4" style="skin_hotspotstyle" ath="-148.371" atv="-1.174" linkedscene="entrance" />
+		<hotspot name="spot5" style="skin_hotspotstyle" ath="-75.235" atv="-2.709" linkedscene="outside-lounge" />
+
+	</scene>
+
+	<scene name="Passageway" title="Passageway" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_24.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, passageway-spot); set(layer[radar].parent, passageway-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-89.555" vlookat="17.182" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_24.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_24.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-161.936" atv="13.847" linkedscene="bedroom-2" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-10.193" atv="31.874" linkedscene="bedroom-3" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="-3.576" atv="-2.306" linkedscene="outside-lounge" />
+		<hotspot name="spot4" style="skin_hotspotstyle" ath="-87.346" atv="-3.444" linkedscene="master-entrance" />
+		<hotspot name="spot5" style="skin_hotspotstyle" ath="96.571" atv="-1.584" linkedscene="kitchen" />
+
+	</scene>
+
+	<scene name="Bedroom-2" title="Bedroom 2" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_25.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, bedroom-2-spot); set(layer[radar].parent, bedroom-2-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-142.732" vlookat="29.313" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_25.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_25.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="36.753" atv="48.902" linkedscene="passageway" />
+
+	</scene>
+
+	<scene name="Bedroom-3" title="Bedroom 3" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_26.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, bedroom-3-spot); set(layer[radar].parent, bedroom-3-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-128.798" vlookat="28.542" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_26.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_26.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-10.208" atv="-4.316" linkedscene="outside-lounge" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-178.179" atv="25.824" linkedscene="passageway" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="-176.888" atv="-2.777" linkedscene="bedroom-2" />
+
+	</scene>
+
+	<scene name="Outside-Lounge" title="Outside Lounge" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_27.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, outside-lounge-spot); set(layer[radar].parent, outside-lounge-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-169.040" vlookat="42.472" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_27.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_27.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="115.778" atv="-0.827" linkedscene="dining-room" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-88.413" atv="-2.934" linkedscene="master-balcony" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="-169.020" atv="-0.678" linkedscene="bedroom-3" />
+
+	</scene>
+
+	<scene name="Master-Balcony" title="Master Balcony" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_28.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, master-balcony-spot); set(layer[radar].parent, master-balcony-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-173.699" vlookat="18.046" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_28.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_28.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="175.199" atv="25.834" linkedscene="master-bedroom" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="178.254" atv="-1.842" linkedscene="master-entrance" />
+
+	</scene>
+
+	<scene name="Master-Bedroom" title="Master Bedroom" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_29.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, master-bedroom-spot); set(layer[radar].parent, master-bedroom-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-122.147" vlookat="20.733" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_29.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_29.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-15.955" atv="0.172" linkedscene="master-balcony" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-177.602" atv="-4.380" linkedscene="master-entrance" />
+
+	</scene>
+
+	<scene name="Master-Entrance" title="Master Entrance" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_30.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, master-entrance-spot); set(layer[radar].parent, master-entrance-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="-392.502" vlookat="15.295" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_30.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_30.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-4.950" atv="19.662" linkedscene="master-bedroom" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-58.038" atv="37.328" linkedscene="master-bathroom" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="91.337" atv="-4.068" linkedscene="passageway" />
+
+	</scene>
+
+	<scene name="Master-Bathroom" title="Master Bathroom" onstart="updateRadar();" thumburl="panos/CraftHomes_RT_32.tiles/thumb.jpg" lat="" lng="" heading="">
+
+        <action name="updateradar">
+            set(layer[activespot].parent, master-bathroom-spot); set(layer[radar].parent, master-bathroom-spot); set(layer[radar].heading, 270);
+        </action>
+        
+		<view hlookat="324.438" vlookat="9.620" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/CraftHomes_RT_32.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/CraftHomes_RT_32.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-2.384" atv="-7.239" linkedscene="master-entrance" />
+
+	</scene>
+
+
+</krpano>

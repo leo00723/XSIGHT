@@ -1,0 +1,333 @@
+﻿<krpano version="1.19" title="Virtual Tour">
+
+	<include url="skin/vtourskin.xml" />
+
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="false"
+	               maps_type="google"
+	               maps_bing_api_key=""
+	               maps_google_api_key=""
+	               maps_zoombuttons="false"
+	               gyro="true"
+	               webvr="true"
+	               webvr_gyro_keeplookingdirection="false"
+	               webvr_prev_next_hotspots="true"
+	               littleplanetintro="true"
+	               title="true"
+	               thumbs="true"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_buttons="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               deeplinking="false"
+	               loadscene_flags="MERGE"
+	               loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+	               loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+	               loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+	               loadingtext="loading..."
+	               layout_width="100%"
+	               layout_maxwidth="814"
+	               controlbar_width="-24"
+	               controlbar_height="40"
+	               controlbar_offset="20"
+	               controlbar_offset_closed="-40"
+	               controlbar_overlap.no-fractionalscaling="10"
+	               controlbar_overlap.fractionalscaling="0"
+	               design_skin_images="vtourskin.png"
+	               design_bgcolor="0x2D3E50"
+	               design_bgalpha="0.8"
+	               design_bgborder="0"
+	               design_bgroundedge="1"
+	               design_bgshadow="0 4 10 0x000000 0.3"
+	               design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+	               design_thumbborder_padding="2"
+	               design_thumbborder_bgroundedge="0"
+	               design_text_css="color:#FFFFFF; font-family:Arial;"
+	               design_text_shadow="1"
+	               />
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values 
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<include url="skin/vtourskin_design_ultra_light.xml" />
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+
+
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+		if(startactions !== null, startactions() );
+	</action>
+
+	<layer name="map" url="skin/floor_plan.png" keep="true" handcursor="false" capture="false"
+	       align="righttop"
+	       scale="0.07" scalechildren="true"
+	       onclick="openmap();"
+	       />
+
+	<!-- map opening - scale the map up to 100% (or smaller if the screen is too small) -->
+	<action name="openmap">
+		set(layer[map].onclick, closemap(); );
+		layer[map].changeorigin(righttop,righttop);
+
+		set(bigscale,0.5);
+		if(layer[map].imagewidth GT stagewidth, div(bigscale, stagewidth, layer[map].imagewidth); );
+
+		tween(layer[map].x, layer[map].imagewidth);
+		tween(layer[map].y, layer[map].imageheight);
+		tween(layer[map].scale, 0.15);
+	</action>
+
+	<!-- map closing - scale the map back to 0.25 of its image pixelsize -->
+	<action name="closemap">
+		set(layer[map].onclick, openmap(); );
+		layer[map].changeorigin(righttop,righttop);
+
+		tween(layer[map].x, 0);
+		tween(layer[map].y, 0);
+		tween(layer[map].scale, 0.07);
+	</action>
+
+	<style name="mapspot" keep="true" url="skin/vtourskin_hotspot.png" parent="map" align="lefttop" edge="center" scale.mobile="2" />
+
+	<layer name="spot1" style="mapspot" x="3200" y="2500" zorder="1" onclick="mapspot_loadscene(scene_1_Location_1);" />
+	<layer name="spot2" style="mapspot" x="2700" y="3400" zorder="1" onclick="mapspot_loadscene(scene_1_Location_2);" />
+	<layer name="spot3" style="mapspot" x="2600" y="2700" zorder="1" onclick="mapspot_loadscene(scene_1_Location_3);" />
+	<layer name="spot4" style="mapspot" x="1900" y="1175" zorder="1" onclick="mapspot_loadscene(scene_1_Location_4);" />
+	<layer name="spot5" style="mapspot" x="1000" y="2650" zorder="1" onclick="mapspot_loadscene(scene_1_Location_5);" />
+	<layer name="spot6" style="mapspot" x="1400" y="2000" zorder="1" onclick="mapspot_loadscene(scene_1_Location_6);" />
+	<layer name="spot7" style="mapspot" x="1100" y="1300" zorder="1" onclick="mapspot_loadscene(scene_1_Location_7);" />
+	<layer name="spot8" style="mapspot" x="2800" y="700" zorder="1" onclick="mapspot_loadscene(scene_1_Location_8);" />
+
+
+
+	<!-- action for loading the scene when clicking on the map spots -->
+	<action name="mapspot_loadscene">
+		if(layer[map].scale GT 0.25,
+			<!-- special mode for zoomed map: hide big map, loadscene, show small map -->
+			set(layer[map].enabled, false);
+			tween(layer[map].alpha, 0.0, 0.25, default,
+				loadscene(%1, null, MERGE, BLEND(1));
+
+				set(layer[map].onclick, openmap(); );
+				layer[map].changeorigin(leftbottom,leftbottom);
+
+				set(layer[map].x, 0);
+				set(layer[map].y, 0);
+				set(layer[map].scale, 0.25);
+
+				set(events[sceneload].onloadcomplete,
+					delayedcall(1,
+						tween(layer[map].alpha, 1.0, 0.5, default, set(layer[map].enabled, true); );
+					  );
+				  );
+			  );
+		  ,
+			<!-- small map: just load the scene -->
+			loadscene(%1, null, MERGE, BLEND(1));
+		  );
+	</action>
+
+	<!-- active spot image (overlays the normal spot) -->
+	<layer name="activespot" url="skin/vtourskin_hotspot_a.png" keep="true"
+	       align="lefttop" zorder="2" scale.mobile="2"
+	       />
+
+	<!-- radar layer (overlays the normal spot too, but is behind the activespot image) -->
+	<layer name="radar" keep="true"
+	       url.flash="%SWFPATH%/plugins/radar.swf"
+	       url.html5="%SWFPATH%/plugins/radar.js"
+	       align="center" zorder="1"
+	       scale.mobile="1.5" scale="1.5"
+	       fillalpha="0.5" fillcolor="#AED6F1"
+	       linewidth="1.0" linecolor="#AED6F1" linealpha="0.5"
+	       />
+
+	<scene name="scene_1_Location_1" title="1_Location_1" onstart="updateradar();" thumburl="panos/1_Location_1.tiles/thumb.jpg" lat="" lng="" heading="">
+
+	<action name="updateradar">
+			set(layer[activespot].parent, spot1);
+			set(layer[radar].parent, spot1);
+			set(layer[radar].heading, -90);
+		</action>
+
+		<view hlookat="-93.079" vlookat="16.415" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_1.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_1.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-107.537" atv="25.418" linkedscene="scene_1_location_3" />
+
+	</scene>
+
+	<scene name="scene_1_Location_2" title="1_Location_2" onstart="updateradar();" thumburl="panos/1_Location_2.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot2);
+			set(layer[radar].parent, spot2);
+			set(layer[radar].heading, -1.92);
+		</action>
+
+		<view hlookat="-98.537" vlookat="15.355" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_2.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_2.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-79.456" atv="13.472" linkedscene="scene_1_location_3" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-91.134" atv="0.963" linkedscene="scene_1_location_4" />
+	</scene>
+
+	<scene name="scene_1_Location_3" title="1_Location_3" onstart="updateradar();" thumburl="panos/1_Location_3.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot3);
+			set(layer[radar].parent, spot3);
+			set(layer[radar].heading, -45);
+		</action>
+
+		<view hlookat="-70.299" vlookat="19.668" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_3.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_3.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="131.346" atv="9.448" linkedscene="scene_1_location_2" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-64.600" atv="5.258" linkedscene="scene_1_location_4" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="27.209" atv="26.704" linkedscene="scene_1_location_1" />
+		<hotspot name="spot4" style="skin_hotspotstyle" ath="-26.886" atv="11.768" linkedscene="scene_1_location_8" />
+
+	</scene>
+
+	<scene name="scene_1_Location_4" title="1_Location_4" onstart="updateradar();" thumburl="panos/1_Location_4.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot4);
+			set(layer[radar].parent, spot4);
+			set(layer[radar].heading, -220);
+		</action>
+
+		<view hlookat="-84.761" vlookat="13.786" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_4.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_4.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-85.215" atv="7.705" linkedscene="scene_1_location_3" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-76.922" atv="-0.382" linkedscene="scene_1_location_2" />
+		<hotspot name="spot3" url="skin/vtourskin_hotspot_a.png" scale="0.2" ath="-143.426" atv="22.059" style="tooltip" distorted="true" tooltip="This couch is from Coricraft, buy it now for R20 000 *still trying to include button*" />
+		<style name="tooltip" onover="copy(layer[tooltip].html, tooltip); 
+		set(layer[tooltip].visible, true); tween(layer[tooltip].alpha, 1.0, 0.5); 
+		asyncloop(hovering, copy(layer[tooltip].x,mouse.stagex); 
+		copy(layer[tooltip].y,mouse.stagey); );" onout="tween(layer[tooltip].alpha, 0.0, 0.25, default, set(layer[tooltip].visible,false), copy(layer[tooltip].x,mouse.stagex); copy(layer[tooltip].y,mouse.stagey); );"/>
+		<!--  the 'tooltip' textfield  -->
+		<layer name="tooltip" keep="true" url="%SWFPATH%/plugins/textfield.swf" 
+		parent="STAGE" visible="false" alpha="0" enabled="false" align="lefttop" 
+		edge="bottom" oy="-2" background="false" backgroundcolor="0xFFFFFF" 
+		backgroundalpha="1.0" border="false" bordercolor="0x000000" borderalpha="1.0" 
+		borderwidth="1.0" roundedge="0" shadow="0.0" shadowrange="4.0" shadowangle="45" 
+		shadowcolor="0x000000" shadowalpha="1.0" textshadow="1" textshadowrange="6.0" 
+		textshadowangle="90" textshadowcolor="0x000000" textshadowalpha="1.0" 
+		css="text-align:center; color:#FFFFFF; font-family:Arial; font-weight:bold; font-size:14px;" html=""/>
+
+	</scene>
+
+	<scene name="scene_1_Location_5" title="1_Location_5" onstart="updateradar();" thumburl="panos/1_Location_5.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot5);
+			set(layer[radar].parent, spot5);
+			set(layer[radar].heading, 25);
+		</action>
+
+		<view hlookat="-179.802" vlookat="7.812" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_5.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_5.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-95.746" atv="4.175" linkedscene="scene_1_location_6" />
+
+	</scene>
+
+	<scene name="scene_1_Location_6" title="1_Location_6" onstart="updateradar();" thumburl="panos/1_Location_6.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot6);
+			set(layer[radar].parent, spot6);
+			set(layer[radar].heading, -30);
+		</action>
+
+		<view hlookat="-81.115" vlookat="18.692" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_6.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_6.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-80.661" atv="10.165" linkedscene="scene_1_location_7" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="171.480" atv="10.249" linkedscene="scene_1_location_5" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="110.601" atv="4.806" linkedscene="scene_1_location_3" />
+
+	</scene>
+
+	<scene name="scene_1_Location_7" title="1_Location_7" onstart="updateradar();" thumburl="panos/1_Location_7.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot7);
+			set(layer[radar].parent, spot7);
+			set(layer[radar].heading, -150);
+		</action>
+
+		<view hlookat="-146.423" vlookat="17.583" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_7.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_7.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-136.344" atv="17.105" linkedscene="scene_1_location_6" />
+
+	</scene>
+
+	<scene name="scene_1_Location_8" title="1_Location_8" onstart="updateradar();" thumburl="panos/1_Location_8.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<action name="updateradar">
+			set(layer[activespot].parent, spot8);
+			set(layer[radar].parent, spot8);
+			set(layer[radar].heading, 120);
+		</action>
+
+		<view hlookat="-65.570" vlookat="18.537" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1_Location_8.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/1_Location_8.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-36.379" atv="6.999" linkedscene="scene_1_location_3" />
+
+	</scene>
+
+
+</krpano>

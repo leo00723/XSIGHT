@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://jestalt.co.za/</loc>
+  <lastmod>2019-03-02T13:02:37+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/portfolio</loc>
+  <lastmod>2019-03-02T13:01:02+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/about-us</loc>
+  <lastmod>2019-03-02T13:00:52+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/contact-us</loc>
+  <lastmod>2019-03-02T13:00:55+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/quote-form</loc>
+  <lastmod>2019-03-02T13:01:03+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/careers</loc>
+  <lastmod>2019-03-02T13:00:53+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/privacy-policy</loc>
+  <lastmod>2019-03-02T13:01:02+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/terms-and-conditions</loc>
+  <lastmod>2019-03-02T13:01:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://jestalt.co.za/index</loc>
+  <lastmod>2019-03-02T13:02:37+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>

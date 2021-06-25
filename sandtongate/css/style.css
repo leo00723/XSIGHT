@@ -1,0 +1,64 @@
+#logo {
+    position: relative;
+    left: 50%;
+    margin: 30px 0px;
+    transform: translate(-50%,0);
+    width: 148px;
+    height: 146px;
+}
+.contain{
+    position: relative;
+    left: 50%;
+    padding: 20px 0px;
+    width: 98%;
+    background-color: #F4FAFD;
+    transform: translate(-50%,0);
+}
+.welcome{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%,0);
+    color:#707070;
+    font-size: 20px;
+    font-family: Helvetica, sans-serif;
+    font-weight: lighter;
+    text-align: center;
+    line-height: 35px;
+    letter-spacing:2px;
+    
+}
+.welcome #name{
+    font-weight: normal;
+    color:#003F52;
+    font-size: 30px;
+}
+.welcome #message{
+    font-size: 15px;
+    letter-spacing:0px;
+}
+.images{
+    padding: 20px 0px;
+    position: relative;
+    box-shadow: #707070;
+}
+.images .button{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 15px;
+    text-decoration: none;
+    background-color: rgba(0, 63, 82, 0.77);
+    border: none;
+    border-radius: 5px;
+    color:white;
+    padding: 3% 5%;
+}
+
+.images .image{
+    width:100%;
+}
+
+.container {
+    width: 100%;
+}

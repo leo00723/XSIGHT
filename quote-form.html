@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jestalt - Quote Form</title>
+    <meta name="description" content="Fill in the form below to the best of your abilities. Include any attachments that you think are necessary.
+    After submitting this form, please allow us 1-2 business days to come back to you with a quote.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Font Awesome and Pixeden Icon Stroke icon fonts-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pe-icon-7-stroke.css">
+    <!-- Google fonts - Roboto-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="favicon.png">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    <link href="vendor/hamburgers/dist/hamburgers.css" rel="stylesheet">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <script>
+    $(function()
+    {
+        function after_form_submitted(data)
+        {
+            console.log('executing after form submitted function');
+            if(data.result == 'success')
+            {
+                $('form#reused_form').hide();
+                $('#success_message').show();
+                $('#error_message').hide();
+            }
+            else
+            {
+                $('#error_message').append('<ul></ul>');
+    
+                jQuery.each(data.errors,function(key,val)
+                {
+                    $('#error_message ul').append('<li>' + val + '</li>');
+                });
+                $('#success_message').hide();
+                $('#error_message').show();
+    
+                //reverse the response on the button
+                $('button[type="button"]', $form).each(function()
+                {
+                    $btn = $(this);
+                    label = $btn.prop('orig_label');
+                    if(label)
+                    {
+                        $btn.prop('type','submit' );
+                        $btn.text(label);
+                        $btn.prop('orig_label','');
+                    }
+                });
+    
+            }//else
+        }
+    
+        $('#reused_form').submit(function(e)
+        {
+            console.log('executing submit function');
+            e.preventDefault();
+
+            $form = $(this);
+            //show some response on the button
+            $('button[type="submit"]', $form).each(function()
+            {
+                $btn = $(this);
+                $btn.prop('type','button' );
+                $btn.prop('orig_label',$btn.text());
+                $btn.text('Sending ...');
+            });
+
+            console.log('before creating form data');
+            var formdata = new FormData(this);
+            console.log('after creating form data');
+            $.ajax({
+                type: "POST",
+                url: 'handler.php',
+                data: formdata,
+                success: after_form_submitted,
+                dataType: 'json' ,
+                processData: false,
+                contentType: false,
+                cache: false
+            });
+        });
+    });
+    </script>
+
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  </head>
+  <body>
+    <div class="navbar">
+        <div class="nav-list infopage">
+          <ul id="navigation">
+            <li><a href="/">Home</a></li>
+            <li><a href="portfolio">Portfolio</a></li>
+            <li><a href="about-us">About Us</a></li>
+            <li><a href="contact-us">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="btn-menu" id="menu-button">
+          <div class="hamburger hamburger--minus is-active">
+            <div class="hamburger-box">
+              <div class="hamburger-inner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <section class="background-gray-lightest">
+      <div class="container">
+        <div class="breadcrumbs">
+          <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="contact-us">Contact Us</a></li>
+            <li>Quote application</li>
+          </ul>
+        </div>
+        <h1 class="heading">Quote application</h1>
+        <p class="lead">Fill in the form below to the best of your abilities. Include any attachments that you think are necessary.
+            After submitting this form, please allow us 1-2 business days to come back to you with a quote.
+        </p>
+      </div>
+    </section>
+
+    <section>
+    <div class="container">
+    <div class="row">
+    <!-- Form Started -->
+	<div class="container form-top">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 col-sm-12 col-xs-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            <form id="reused_form">
+                                <h3>Person of contact</h3>
+                                <hr/>
+                                 <div class="form-group">
+                                     <label for="name">Name<span class="required"> *</span></label>
+                                     <input type="text" name="name" class="form-control" placeholder="Enter name">
+                                 </div>
+                                 <div class="form-group">
+                                     <label for="email">Email address<span class="required"> *</span></label>
+                                     <input type="email" name="email" class="form-control" placeholder="Enter email">
+                                 </div>
+                                 <div class="form-group">
+                                        <label for="contact-number">Contact number<span class="required"> *</span></label>
+                                        <input type="text" name="contact-number" class="form-control" placeholder="Enter contact number">
+                                </div>
+
+                                <br/>
+                                <h3>Company details</h3>
+                                <hr/>
+                                <div class="form-group">
+                                        <label for="company-name">Company name<span class="required"> *</span></label>
+                                        <input type="text" name="company-name" class="form-control" placeholder="Enter company name">
+                                </div>
+                                <div class="form-group">
+                                        <label for="company-website">Company website<span class="required"> *</span></label>
+                                        <input type="text" name="company-website" class="form-control" placeholder="http://your-company.com">
+                                </div>
+
+                                <br/>
+                                <h3>Project details</h3>
+                                <hr/>
+                                <div class="form-group">
+                                        <label for="project-name">Project name<span class="required"> *</span></label>
+                                        <input type="text" name="project-name" class="form-control" placeholder="Enter project name">
+                                </div>
+                                <div class="form-group">
+                                        <label for="project-type">Project type<span class="required"> *</span></label>
+                                        <select name="project-type" class="form-control">
+                                            <option value="">---</option>
+                                            <option value="Residential">Residential</option>
+                                            <option value="Development">Development</option>
+                                            <option value="Industrial">Industrial</option>
+                                            <option value="Commerical">Commercial</option>
+                                            <option value="Retail">Retail</option>
+                                        </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Please select one or more of the services you are looking for</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="Animations" name="animations" onchange="handleChange(this, 'animation-info');">
+                                            <span class="fa"><i class="fa fa-check"></i></span>
+                                            Animation
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="Still image render" name="still-image-render" onchange="handleChange(this, 'render-info');">
+                                            <span class="fa"><i class="fa fa-check"></i></span>
+                                            Still image renders
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="Virtual reality" name="virtual-reality" onchange="handleChange(this, 'vr-info');">
+                                            <span class="fa"><i class="fa fa-check"></i></span>
+                                            Virtual reality
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="Interactive walkthrough" name="interactive-walkthrough" onchange="handleChange(this, 'iw-info');">
+                                            <span class="fa"><i class="fa fa-check"></i></span>
+                                            Interactive walkthrough
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="animation-info" hidden>
+                                    <div class="col-md-12"><hr/><h5>Please fill in the required extra information for animations</h5></div>
+                                    <div class="form-group col-md-4">
+                                        <label for="animation-length">Approximate length of animation</label>
+                                        <input type="text" name="animation-length" class="form-control" placeholder="Enter length of animation">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="animation-type">Type of animation</label>
+                                            <select name="animation-type" class="form-control">
+                                                <option value="animation-type-left-blank">---</option>
+                                                <option value="animation-interior">Interior</option>
+                                                <option value="animation-exterior">Exterior</option>
+                                                <option value="animation-interior-exterior">Interior & exterior</option>
+                                            </select>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="render-info" hidden>
+                                    <div class="col-md-12"><hr/><h5>Please fill in the required extra information for still-image renders</h5></div>
+                                    <div class="form-group col-md-4">
+                                            <label for="number-of-renders-interior">Number of interior renders</label>
+                                            <input type="number" min="0" name="number-of-renders-interior" class="form-control" placeholder="Enter number of renders">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="number-of-renders-exterior">Number of exterior renders</label>
+                                            <input type="number" min="0" name="number-of-renders-exterior" class="form-control" placeholder="Enter number of renders">
+                                    </div>
+                                </div>
+
+                                <div class="row" id="vr-info" hidden>
+                                    <div class="col-md-12"><hr/><h5>Please fill in the required extra information for virtual reality</h5></div>
+                                    <div class="form-group col-md-4">
+                                            <label for="number-of-vr-rooms">Number of rooms</label>
+                                            <input type="number" min="0" name="number-of-vr-rooms" class="form-control" placeholder="Enter number of rooms">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="vr-type">Type of walkthrough</label>
+                                            <select name="vr-type" class="form-control">
+                                                <option value="vr-type-left-blank">---</option>
+                                                <option value="vr-interior">Interior</option>
+                                                <option value="vr-exterior">Exterior</option>
+                                                <option value="vr-interior-exterior">Interior & exterior</option>
+                                            </select>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="iw-info" hidden>
+                                    <div class="col-md-12"><hr/><h5>Please fill in the required extra information for interactive walkthroughs</h5></div>
+                                    <div class="form-group col-md-4">
+                                            <label for="number-of-iw-rooms">Number of rooms</label>
+                                            <input type="number" min="0" name="number-of-iw-rooms" class="form-control" placeholder="Enter number of rooms">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="iw-type">Type of walkthrough</label>
+                                            <select name="iw-type" class="form-control">
+                                                <option value="iw-type-left-blank">---</option>
+                                                <option value="iw-interior">Interior</option>
+                                                <option value="iw-exterior">Exterior</option>
+                                                <option value="iw-interior-exterior">Interior & exterior</option>
+                                            </select>
+                                    </div>
+                                </div>
+
+                                <script>
+                                function handleChange(checkbox, id) {
+                                    if(checkbox.checked == true){
+                                        document.getElementById(id).removeAttribute("hidden");
+                                    }else{
+                                        document.getElementById(id).setAttribute("hidden", true);
+                                   }
+                                }
+                                </script>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="size-of-site">Size of the site (m<sup>2</sup>)<span class="required"> *</span></label>
+                                        <input type="number" min="0" name="size-of-site" class="form-control" placeholder="Enter the size of the site">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="size-of-built-area">Size of the built area (m<sup>2</sup>)<span class="required"> *</span></label>
+                                        <input type="number" min="0" name="size-of-built-area" class="form-control" placeholder="Enter the size of the built area">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="project-description">Project description<span class="text-muted" style="font-size: 11px"> Type out a brief description of the project. 
+                                        Please be sure to include: <ul>
+                                            <li>The location of the stand</li>
+                                            <li>Which rooms you would like to include (kitchen, bedrooms, bathrooms)</li>
+                                            <li>Time of day for your rendering or animation</li>
+                                            <li>Any other special requirements</li>
+                                        </ul>
+                                    </span>
+                                </label>
+                                    <textarea style="margin-top:0" rows="8" name="project-description" class="form-control" placeholder=""></textarea>
+                                </div>
+                                
+                                <br/>
+                                <h3>Attachments</h3>
+                                <p class="text-muted" style="font-size:11px">Limited to 10 uploads. If your file exceeds 100MB, please make
+                                        use of our <a href="https://wetransfer.com/?to=info@jestalt.com" target="_blank">WeTransfer</a> link.</p>
+                                <hr/>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <input type="file" name="upload1" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload2" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload3" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload4" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload5" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload6" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload7" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload8" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload9" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            <input type="file" name="upload10" class="form-control" accept="image/*, video/*, audio/*, .pdf, .fbx, .obj, .dwg, .mkv, .psd, .max, .pln, .rvt" placeholder="Upload your file here">
+                                    </div>
+                                </div>
+                                <br/>
+                                <h3>One more thing...</h3>
+                                <hr/>
+                                <div class="form-group">
+                                    <label for="reference">How did you hear of Jestalt?<span class="required"> *</span></label>
+                                    <select name="reference" class="form-control">
+                                        <option value="">---</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Email">Email</option>
+                                        <option value="Cold-Call">Cold call</option>
+                                        <option value="Website">Website</option>
+                                        <option value="Word-Of-Mouth">Word of mouth</option>
+                                        <option value="Referral">Referral</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                 <!--<div class="g-recaptcha" data-sitekey="6LfshooUAAAAAGlJPEYE8kHOf4kxQnctC0vlf2nS"></div>-->
+                                 <br/>
+                                 <div class="form-group">
+                                     <button type="submit" class="btn btn-raised btn-block btn-primary">Submit application</button>
+                                 </div>
+                            </form>
+                            <div id="error_message" style="width:100%; height:100%; display:none; ">
+                            <h4>Something went wrong</h4>
+                            <a onclick="location.reload()"> &#8634; Reload the form</a><br/>
+                            </div>
+                            <div id="success_message" style="width:100%; height:100%; display:none; ">
+                            <h2>Success! We have recieved your application and will get back to you shortly!</h2>
+                            <a href="index">&larr; Return to the home page.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Form Ended -->
+        </div>
+    </section>     
+
+<!-- FOOTER BEGIN -->
+<footer class="footer">
+        <div class="footer__block">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <h4 class="heading">Elevator <span style="color:rgb(50, 145, 214)">PITCH</span></h4>
+                <p>Jestalt is currently in a state of change. We are using our skills and backgrounds in architecture, visualization, and the property sales market, to develop interactive tools to revitalise the off-plan property market.<br/></p>
+                <p>We are looking for property related industry professionals to connect with. Our goals are to discuss our platform in conjunction with your business, sharing knowledge of our experiences from within different parts of the industry, and talk broadly on where we believe it is headed.<br/></p>
+                <p>Through these discussions we hope to develop a keen perspective on the property market in both South Africa & the United Kingdom. To assess what opportunities may lie within the sector, and what key opportunities our new platform can look to provide solutions for.<br/></p>
+                <p>We are also looking for the right investment partners. If you are interested in meeting with us to discuss our solutions for the PropTech space please get in touch.</p>
+              </div>
+              <div class="col-md-3 col-sm-12">
+                <h4 class="heading">Our Offices</h4>
+                <h5>Johannesburg</h5>
+                <p> 144 Katherine Street<br />Grayston Ridge Office Park<br />Sandown, Sandton<br/><i class="fa fa-phone"></i>: <a href="tel:+27826830011">(+27) 82 683 0011</a></p>
+                <h5>London</h5>
+                <p> Lavenham Rd<br />Southfields<br />SW18 5EZ<br/><i class="fa fa-phone"></i>: <a href="tel:+447387939562">+44 7387 939562</a></p>
+              </div>
+            <div class="col-md-3 col-sm-12">
+              <h4 class="heading">Social Media</h4>
+              <p class="social social--big">
+                <a href="https://www.facebook.com/jestalt/" data-animate-hover="pulse" class="external facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/channel/UCuZOfZhmI_PP_7_WF4K9fmg" data-animate-hover="pulse" class="external youtube"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/jestalt_pm/" data-animate-hover="pulse" class="external instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/company/jestalt-architectural-outsourcing-solutions/" data-animate-hover="pulse" class="external linkedin"><i class="fab fa-linkedin"></i></a>
+              </p>
+  
+              <h4 class="heading">Other Links</h4>
+              <p>
+                <a href="careers">Careers</a><br/>
+                <a href="privacy-policy">Privacy Policy</a><br/>
+                <a href="terms-and-conditions">Terms & Conditions</a><br/>
+                <a href="sitemap.xml">Sitemap</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="footer__copyright">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <p>&copy; <script type="text/javascript"> var theDate=new Date(); document.write(theDate.getFullYear())</script> J E S T A L T</p>
+              </div>
+              <div class="col-md-6">
+                <p class="credit"><a href="about-us" class="external">Designed by Jestalt</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- END OF FOOTER -->
+      
+    <!-- Javascript files-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.cookie.js"> </script>
+    <script src="js/front.js"></script>
+    <script>
+        var $menuButton = document.getElementById('menu-button');
+
+        $menuButton.addEventListener('click', function() {
+        var isShowing = $('.hamburger').hasClass('is-active');
+        if(isShowing) {
+            $('.nav-list').css('opacity', '1');  
+        } else {
+            $('.nav-list').css('opacity', '0');
+        }
+        });
+
+            $('.hamburger').click(function(e){
+            e.preventDefault();
+            $(this).toggleClass('is-active');
+            });
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135192980-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-135192980-1');
+    </script>
+
+  </body>
+</html>
