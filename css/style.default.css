@@ -677,6 +677,7 @@ p.social.social--big i {
 	width: 100%;
 	left: 5%;
 	top: 40%;
+	padding-right: 40%;
 }
 
 .main-jumbotron.xl .content {
@@ -2261,7 +2262,6 @@ a.list-group-item.active > .badge,
 	border-radius: 5px; /* 5px rounded corners */
 	padding: 5%;
 	margin-top: 5%;
-	height: calc(38vh);
 }
 .icon-flex,
 .icon-wrapper {
@@ -2387,4 +2387,27 @@ img {
 	border-radius: 0 20px 20px 0;
 	background: #243c4f;
 	color: #fff;
+}
+
+.row1 {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+/* Create four equal columns that sits next to each other */
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+	.column1 {
+		flex: 50%;
+		max-width: 50%;
+	}
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+	.column1 {
+		flex: 100%;
+		max-width: 100%;
+	}
 }
